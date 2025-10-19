@@ -57,6 +57,18 @@ export function Navbar() {
           Appointer
         </Link>
 
+        {/* Navigation Links */}
+        <div className="ml-8 flex items-center gap-6">
+          <Link href="/providers" className="text-sm font-medium hover:text-blue-600 transition-colors">
+            Browse Providers
+          </Link>
+          {user && (
+            <Link href="/appointments" className="text-sm font-medium hover:text-blue-600 transition-colors">
+              My Appointments
+            </Link>
+          )}
+        </div>
+
         <div className="ml-auto flex items-center gap-4">
           {user ? (
             // Show avatar with dropdown menu when user is logged in
