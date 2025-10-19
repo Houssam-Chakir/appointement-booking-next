@@ -136,16 +136,30 @@ export default function ProviderDetailPage() {
       const day = String(selectedDate.getDate()).padStart(2, '0')
       const dateStr = `${year}-${month}-${day}`
       
+      console.log('Fetching slots with:', { providerId, dateStr, duration })
+      
       const { data, error } = await supabase.rpc('get_available_slots', {
         p_provider_id: providerId,
         p_date: dateStr,
-        p_duration_hours: Math.ceil(duration) // Round up for API call
+        p_duration_hours: duration
       })
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase RPC error:', error)
+        console.error('Error message:', error.message)
+        console.error('Error code:', error.code)
+        console.error('Error details:', error.details)
+        console.error('Error hint:', error.hint)
+        setError(`Database error: ${error.message || 'Unknown error'}`)
+        return
+      }
+      
+      console.log('Slots fetched successfully:', data?.length, 'slots')
       setSlots(data || [])
     } catch (err: any) {
       console.error('Error fetching slots:', err)
+      console.error('Error details:', JSON.stringify(err, null, 2))
+      setError('Failed to load available slots. Please try again.')
     }
   }
 
@@ -176,7 +190,7 @@ export default function ProviderDetailPage() {
         p_user_id: user.id,
         p_date: dateStr,
         p_start_time: selectedSlot,
-        p_duration_hours: Math.ceil(duration)
+        p_duration_hours: duration
       })
 
       if (error) throw error
