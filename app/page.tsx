@@ -1,4 +1,3 @@
-import { Navbar } from '@/components/Navbar'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { Calendar, Clock, Shield, Star } from 'lucide-react'
@@ -6,7 +5,7 @@ import { Calendar, Clock, Shield, Star } from 'lucide-react'
 export default function Home() {
   return (
     <>
-      <Navbar />
+
       <main>
         {/* Hero Section */}
         <section className="container mx-auto px-4 py-20">
@@ -15,7 +14,7 @@ export default function Home() {
               Book Appointments with Trusted Professionals
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Find and book verified service providers in Morocco. From dentists to barbers, 
+              Find and book verified service providers in Morocco. From dentists to barbers,
               from lawyers to personal trainers - all in one place.
             </p>
             <div className="flex gap-4 justify-center">

@@ -80,7 +80,12 @@ export default function ProviderDetailPage() {
   const fetchUserAppointments = async () => {
     if (!currentUser) return
     try {
-      const dateStr = selectedDate.toISOString().split('T')[0]
+      // Format date in local timezone
+      const year = selectedDate.getFullYear()
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
+      const day = String(selectedDate.getDate()).padStart(2, '0')
+      const dateStr = `${year}-${month}-${day}`
+      
       const { data, error } = await supabase
         .from('appointments')
         .select('id, appointment_date, time_slot, booking_group_id')
@@ -117,7 +122,12 @@ export default function ProviderDetailPage() {
 
   const fetchAvailableSlots = async () => {
     try {
-      const dateStr = selectedDate.toISOString().split('T')[0]
+      // Format date in local timezone to avoid UTC conversion issues
+      const year = selectedDate.getFullYear()
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
+      const day = String(selectedDate.getDate()).padStart(2, '0')
+      const dateStr = `${year}-${month}-${day}`
+      
       const { data, error } = await supabase.rpc('get_available_slots', {
         p_provider_id: providerId,
         p_date: dateStr,
@@ -147,7 +157,12 @@ export default function ProviderDetailPage() {
     setBookingResult(null)
 
     try {
-      const dateStr = selectedDate.toISOString().split('T')[0]
+      // Format date in local timezone
+      const year = selectedDate.getFullYear()
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
+      const day = String(selectedDate.getDate()).padStart(2, '0')
+      const dateStr = `${year}-${month}-${day}`
+      
       const { data, error } = await supabase.rpc('book_appointment', {
         p_provider_id: providerId,
         p_user_id: user.id,
