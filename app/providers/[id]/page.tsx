@@ -5,6 +5,14 @@ import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Clock, MapPin, Star, ArrowLeft, CalendarIcon } from 'lucide-react'
 import Link from 'next/link'
 import Calendar from 'react-calendar'
@@ -352,23 +360,29 @@ export default function ProviderDetailPage() {
               </div>
 
               {/* Duration Selector */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Duration</label>
-                <select
-                  value={duration}
-                  onChange={(e) => {
-                    setDuration(Number(e.target.value))
+              <div className="mb-6 space-y-2">
+                <Label htmlFor="duration">Duration</Label>
+                <Select 
+                  value={duration.toString()} 
+                  onValueChange={(value) => {
+                    setDuration(Number(value))
                     setSelectedSlot(null)
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value={0.5}>30 minutes - {(provider.hourly_rate * 0.5).toFixed(0)} {provider.currency}</option>
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map(h => (
-                    <option key={h} value={h}>
-                      {h} hour{h > 1 ? 's' : ''} - {provider.hourly_rate * h} {provider.currency}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger id="duration">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0.5">
+                      30 minutes - {(provider.hourly_rate * 0.5).toFixed(0)} {provider.currency}
+                    </SelectItem>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(h => (
+                      <SelectItem key={h} value={h.toString()}>
+                        {h} hour{h > 1 ? 's' : ''} - {provider.hourly_rate * h} {provider.currency}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Available Slots */}

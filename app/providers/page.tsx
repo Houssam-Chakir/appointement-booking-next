@@ -5,6 +5,15 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Label } from '@/components/ui/label'
+import { Slider } from '@/components/ui/slider'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Search, Clock, MapPin, Star } from 'lucide-react'
 import Link from 'next/link'
 
@@ -49,7 +58,7 @@ export default function ProvidersPage() {
 
     // Search filter (name, service type, bio)
     if (searchQuery) {
-      filtered = filtered.filter(p => 
+      filtered = filtered.filter(p =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.service_type.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (p.bio && p.bio.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -120,12 +129,14 @@ export default function ProvidersPage() {
 
         {/* Filters Section */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="space-y-6">
             {/* Search */}
-            <div className="md:col-span-3">
-              <div className="relative">
+            <div>
+              <Label htmlFor="search">Search</Label>
+              <div className="relative mt-2">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <Input
+                  id="search"
                   type="text"
                   placeholder="Search by name, service, or specialty..."
                   value={searchQuery}
@@ -135,40 +146,47 @@ export default function ProvidersPage() {
               </div>
             </div>
 
-            {/* Service Type Filter */}
-            <div>
-              <label className="block text-sm font-medium mb-2">Service Type</label>
-              <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {serviceTypes.map(type => (
-                  <option key={type} value={type}>
-                    {type === 'all' ? 'All Services' : type}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Service Type Filter */}
+              <div className="space-y-2">
+                <Label htmlFor="service-type">Service Type</Label>
+                <Select value={selectedType} onValueChange={setSelectedType}>
+                  <SelectTrigger id="service-type">
+                    <SelectValue placeholder="Select service type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {serviceTypes.map(type => (
+                      <SelectItem key={type} value={type}>
+                        {type === 'all' ? 'All Services' : type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-            {/* Max Rate Filter */}
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Max Rate: {maxRate} MAD/hr
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="1000"
-                step="50"
-                value={maxRate}
-                onChange={(e) => setMaxRate(Number(e.target.value))}
-                className="w-full"
-              />
+              {/* Max Rate Filter */}
+              <div className="space-y-2">
+                <Label htmlFor="max-rate">
+                  Max Rate: <span className="font-semibold">{maxRate} MAD/hr</span>
+                </Label>
+                <Slider
+                  id="max-rate"
+                  min={0}
+                  max={1000}
+                  step={50}
+                  value={[maxRate]}
+                  onValueChange={(value) => setMaxRate(value[0])}
+                  className="mt-2"
+                />
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>0 MAD</span>
+                  <span>1000 MAD</span>
+                </div>
+              </div>
             </div>
 
             {/* Results Count */}
-            <div className="flex items-end">
+            <div className="pt-4 border-t">
               <div className="text-sm text-gray-600">
                 Showing <span className="font-semibold">{filteredProviders.length}</span> of{' '}
                 <span className="font-semibold">{providers.length}</span> providers
@@ -176,7 +194,6 @@ export default function ProvidersPage() {
             </div>
           </div>
         </div>
-
         {/* Loading State */}
         {loading && (
           <div className="text-center py-12">
